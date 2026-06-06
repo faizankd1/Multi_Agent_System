@@ -114,38 +114,6 @@ Final Research Report
 
 ---
 
-## 📂 Project Structure
-
-```bash
-multi-agent-research/
-│
-├── agents/
-│   ├── researcher.py
-│   ├── analyzer.py
-│   └── supervisor.py
-│
-├── tools/
-│   ├── tavily_tool.py
-│   └── scraper_tool.py
-│
-├── chains/
-│   ├── research_chain.py
-│   └── summary_chain.py
-│
-├── graph/
-│   └── workflow.py
-│
-├── prompts/
-│
-├── config/
-│
-├── requirements.txt
-├── .env
-└── main.py
-```
-
----
-
 ## 🚀 Getting Started
 
 ### Clone Repository
