@@ -109,7 +109,6 @@ Final Research Report
 | LangGraph     | Agent Orchestration |
 | Tavily        | Web Search          |
 | BeautifulSoup | Web Scraping        |
-| LCEL          | Runnable Pipelines  |
 | Pydantic      | Structured Outputs  |
 
 ---
