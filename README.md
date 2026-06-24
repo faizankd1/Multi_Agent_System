@@ -109,7 +109,6 @@ Final Research Report
 | LangGraph     | Agent Orchestration |
 | Tavily        | Web Search          |
 | BeautifulSoup | Web Scraping        |
-| LCEL          | Runnable Pipelines  |
 | Pydantic      | Structured Outputs  |
 
 ---
@@ -119,29 +118,17 @@ Final Research Report
 ```bash
 multi-agent-research/
 │
-├── agents/
-│   ├── researcher.py
-│   ├── analyzer.py
-│   └── supervisor.py
-│
-├── tools/
-│   ├── tavily_tool.py
-│   └── scraper_tool.py
-│
-├── chains/
-│   ├── research_chain.py
-│   └── summary_chain.py
-│
-├── graph/
-│   └── workflow.py
-│
-├── prompts/
-│
-├── config/
+├── agents.py
+│   
+├── tools.py
+│   
+├── pipeline.py
+│   
+├── tools.py
 │
 ├── requirements.txt
 ├── .env
-└── main.py
+└── app.py
 ```
 
 ---
