@@ -1,30 +1,42 @@
-from langchain.agents import create_agent
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
+# pip install langchain langchain-mistralai python-dotenv
+from langchain_mistralai import ChatMistralAI
+from langchain.agents import create_tool_calling_agent, AgentExecutor
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
-from tools import web_search , scrape_url
+from tools import web_search, scrape_url
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-llm = ChatOpenAI(model="gpt-4o-mini",temperature=0)
+# ✅ Define the LangChain-compatible LLM
+llm = ChatMistralAI(
+    model="mistral-small-latest",
+    api_key=os.getenv("MISTRAL_API_KEY"),
+    temperature=0.3,
+)
 
-#first agent 
+# ✅ Agents need a prompt with a MessagesPlaceholder for agent_scratchpad
+def make_agent_prompt(system_msg: str):
+    return ChatPromptTemplate.from_messages([
+        ("system", system_msg),
+        ("human", "{input}"),
+        MessagesPlaceholder(variable_name="agent_scratchpad"),  # required for tool-calling agents
+    ])
+
+# First Agent — Search
 def build_search_agent():
-    return create_agent(
-        model=llm,
-        tools=[web_search]
-    )
+    prompt = make_agent_prompt("You are a web search agent. Use the web_search tool to find relevant information.")
+    agent = create_tool_calling_agent(llm=llm, tools=[web_search], prompt=prompt)
+    return AgentExecutor(agent=agent, tools=[web_search], verbose=True)
 
-#Second Agent 
+# Second Agent — Reader
 def build_reader_agent():
-    return create_agent(
-        model=llm,
-        tools=[scrape_url]
-    )
+    prompt = make_agent_prompt("You are a URL reader agent. Use scrape_url to extract content from web pages.")
+    agent = create_tool_calling_agent(llm=llm, tools=[scrape_url], prompt=prompt)
+    return AgentExecutor(agent=agent, tools=[scrape_url], verbose=True)
 
-#writer chain 
+# Writer Chain
 writer_prompt = ChatPromptTemplate.from_messages([
     ("system", "You are an expert research writer. Write clear, structured and insightful reports."),
     ("human", """Write a detailed research report on the topic below.
@@ -45,10 +57,9 @@ Be detailed, factual and professional."""),
 
 writer_chain = writer_prompt | llm | StrOutputParser()
 
-#critic_chain
-
+# Critic Chain
 critic_prompt = ChatPromptTemplate.from_messages([
-     ("system", "You are a sharp and constructive research critic. Be honest and specific."),
+    ("system", "You are a sharp and constructive research critic. Be honest and specific."),
     ("human", """Review the research report below and evaluate it strictly.
 
 Report:

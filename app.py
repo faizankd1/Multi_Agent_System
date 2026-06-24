@@ -370,20 +370,15 @@ with col_pipeline:
     st.markdown('<div class="section-heading">Pipeline</div>', unsafe_allow_html=True)
 
     r = st.session_state.results
-    done = st.session_state.done
 
     def s(step):
         if not r:
             return "waiting"
         steps = ["search", "reader", "writer", "critic"]
-        idx = steps.index(step)
-        completed = list(r.keys())
-        # figure out which steps are done
         if step in r:
             return "done"
-        # which step is running now (first not in r)
         if st.session_state.running:
-            for i, k in enumerate(steps):
+            for k in steps:
                 if k not in r:
                     return "running" if k == step else "waiting"
         return "waiting"
@@ -412,23 +407,22 @@ if st.session_state.running and not st.session_state.done:
     with st.spinner("🔍  Search Agent is working…"):
         search_agent = build_search_agent()
         sr = search_agent.invoke({
-            "messages": [("user", f"Find recent, reliable and detailed information about: {topic_val}")]
+            "input": f"Find recent, reliable and detailed information about: {topic_val}"
         })
-        results["search"] = sr["messages"][-1].content
+        results["search"] = sr["output"]  # ✅ AgentExecutor returns "output"
         st.session_state.results = dict(results)
-    st.rerun() if False else None   # keep inline for now
 
     # ── Step 2: Reader ──
     with st.spinner("📄  Reader Agent is scraping top resources…"):
         reader_agent = build_reader_agent()
         rr = reader_agent.invoke({
-            "messages": [("user",
+            "input": (
                 f"Based on the following search results about '{topic_val}', "
                 f"pick the most relevant URL and scrape it for deeper content.\n\n"
                 f"Search Results:\n{results['search'][:800]}"
-            )]
+            )
         })
-        results["reader"] = rr["messages"][-1].content
+        results["reader"] = rr["output"]  # ✅ AgentExecutor returns "output"
         st.session_state.results = dict(results)
 
     # ── Step 3: Writer ──
@@ -479,7 +473,7 @@ if r:
         <div class="report-panel">
             <div class="panel-label orange">📝 Final Research Report</div>
         """, unsafe_allow_html=True)
-        st.markdown(r["writer"])   # render markdown natively
+        st.markdown(r["writer"])
         st.markdown("</div>", unsafe_allow_html=True)
 
         # Download
