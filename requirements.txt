@@ -16,6 +16,7 @@ html5lib
 python-dotenv
 aiohttp
 pandas
+
 rich
 tenacity
 orjson
