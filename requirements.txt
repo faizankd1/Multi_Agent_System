@@ -1,23 +1,25 @@
-streamlit
+# Streamlit Web Frontend
+streamlit>=1.35.0
 
-langchain==0.3.25
-langchain-core==0.3.65
-langchain-community==0.3.24
-langchain-text-splitters==0.3.8
-langchain-mistralai==0.2.10
+# LangChain & LangGraph Multi-Agent Stack
+langchain>=0.3.0
+langchain-core>=0.3.65
+langchain-mistralai>=0.2.0
+langgraph>=1.2.0
 
-mistralai
-tavily-python
+# Search & Scraping
+tavily-python>=0.5.0
+beautifulsoup4>=4.12.0
+requests>=2.31.0
 
-beautifulsoup4
-requests
-html5lib
+# Resilience, Types & Data Schemas
+pydantic>=2.7.0
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+rich>=13.0.0
+tenacity>=8.2.0
 
-python-dotenv
-aiohttp
-pandas
-
-rich
-tenacity
-orjson
-pydantic
+# Testing & Quality
+pytest>=8.0.0
+pytest-mock>=3.12.0
+pytest-asyncio>=0.23.0
